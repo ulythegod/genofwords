@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Год с тобой — 365 дней вместе</title>
+<style>
+  /* ===== Базовые стили ===== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: #111111;
+    background-image:
+      radial-gradient(circle at 20% 20%, #4a4a4a 0%, transparent 45%),
+      radial-gradient(circle at 80% 70%, #4a4a4a 0%, transparent 50%);
+    color: #d3d3d3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px 16px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* ===== Фоновые сердечки ===== */
+  .bg-hearts {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .bg-heart {
+    position: absolute;
+    bottom: -40px;
+    color: #e8a0b4;
+    opacity: 0;
+    animation: riseUp linear infinite;
+    will-change: transform, opacity;
+    user-select: none;
+  }
+
+  @keyframes riseUp {
+    0% {
+      transform: translateY(0) scale(0.8) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.35;
+    }
+    90% {
+      opacity: 0.15;
+    }
+    100% {
+      transform: translateY(-110vh) scale(1.15) rotate(25deg);
+      opacity: 0;
+    }
+  }
+
+  /* ===== Основная карточка ===== */
+  .card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 620px;
+    background: #1c1c1c;
+    border: 1px solid #4a4a4a;
+    border-radius: 28px;
+    padding: 44px 32px 40px;
+    box-shadow:
+      0 24px 60px rgba(0, 0, 0, 0.55),
+      0 0 0 1px rgba(232, 160, 180, 0.12) inset;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    animation: cardIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes cardIn {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* ===== Заголовок ===== */
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: clamp(28px, 6vw, 42px);
+    line-height: 1.15;
+    font-weight: 800;
+    color: #f4c2d0;
+    letter-spacing: -0.5px;
+  }
+
+  h1 .accent {
+    color: #e8a0b4;
+    display: inline-block;
+  }
+
+  .subtitle {
+    font-size: clamp(14px, 3.5vw, 16px);
+    color: #8a8a8a;
+    max-width: 44ch;
+    line-height: 1.5;
+  }
+
+  /* ===== Блок комплимента ===== */
+  .compliment-wrap {
+    width: 100%;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+  }
+
+  .compliment {
+    font-size: clamp(18px, 4.2vw, 23px);
+    line-height: 1.5;
+    font-weight: 500;
+    color: #f4c2d0;
+    max-width: 40ch;
+    margin: 0 auto;
+    padding: 26px 24px;
+    background: linear-gradient(160deg, #2a2a2a 0%, #1f1f1f 100%);
+    border: 1px solid #4a4a4a;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    position: relative;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Декоративные кавычки */
+  .compliment::before {
+    content: "♥";
+    position: absolute;
+    top: -14px;
+    left: 18px;
+    font-size: 22px;
+    color: #d97a95;
+    background: #1f1f1f;
+    padding: 0 8px;
+    border-radius: 50%;
+    line-height: 1;
+  }
+
+  /* Появление: fade in + slide up */
+  .compliment.animate-in {
+    animation: complimentIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes complimentIn {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Плавное исчезновение старого */
+  .compliment.fade-out {
+    animation: complimentOut 0.28s ease-in both;
+  }
+
+  @keyframes complimentOut {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-14px) scale(0.97);
+    }
+  }
+
+  /* ===== Кнопка ===== */
+  .btn {
+    font-family: inherit;
+    font-size: clamp(16px, 3.8vw, 18px);
+    font-weight: 700;
+    color: #111111;
+    background: linear-gradient(145deg, #f4c2d0 0%, #e8a0b4 100%);
+    border: 2px solid #d97a95;
+    border-radius: 999px;
+    padding: 16px 36px;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    box-shadow:
+      0 10px 26px rgba(217, 122, 149, 0.35),
+      0 2px 0 #d97a95 inset;
+    transition: transform 0.18s ease, box-shadow 0.25s ease, background 0.25s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(145deg, #f4c2d0 0%, #f0b3c5 100%);
+    box-shadow:
+      0 14px 32px rgba(217, 122, 149, 0.5),
+      0 2px 0 #d97a95 inset;
+  }
+
+  .btn:active {
+    transform: translateY(1px) scale(0.98);
+    box-shadow:
+      0 6px 16px rgba(217, 122, 149, 0.4),
+      0 2px 0 #d97a95 inset;
+  }
+
+  .btn:focus-visible {
+    outline: 3px solid #f4c2d0;
+    outline-offset: 4px;
+  }
+
+  /* ===== Счётчик дней (декор) ===== */
+  .days-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    border: 1px solid #4a4a4a;
+    border-radius: 999px;
+    padding: 7px 16px;
+  }
+
+  .days-badge .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e8a0b4;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.75); }
+  }
+
+  /* ===== Спавн-сердечки от кнопки ===== */
+  .spawn-heart {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    color: #e8a0b4;
+    user-select: none;
+    animation: floatUp 1.5s ease-out forwards;
+    will-change: transform, opacity;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translate(0, 0) scale(0.6) rotate(0deg);
+      opacity: 1;
+    }
+    60% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--dx, 0px), -140px) scale(1.25) rotate(var(--rot, 20deg));
+      opacity: 0;
+    }
+  }
+
+  /* ===== Адаптив ===== */
+  @media (max-width: 480px) {
+    .card {
+      padding: 32px 20px 30px;
+      border-radius: 22px;
+      gap: 18px;
+    }
+
+    .compliment {
+      padding: 22px 18px;
+    }
+
+    .btn {
+      padding: 15px 26px;
+      width: 100%;
+    }
+
+    .compliment-wrap {
+      min-height: 170px;
+    }
+  }
+
+  /* Уважаем настройки пользователя */
+  @media (prefers-reduced-motion: reduce) {
+    .card, .bg-heart, .compliment.animate-in, .spawn-heart {
+      animation: none !important;
+    }
+    .compliment {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Фоновые сердечки -->
+<div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
+
+<!-- Основная карточка -->
+<main class="card">
+  <div class="days-badge">
+    <span class="dot"></span>
+    365 дней вместе
+  </div>
+
+  <div>
+    <div class="eyebrow">Наша первая годовщина</div>
+    <h1>Год <span class="accent">с тобой</span></h1>
+  </div>
+
+  <p class="subtitle">
+    Ты — моя самая любимая привычка и моё лучшее «мы». 
+    Нажми на кнопку — и я скажу тебе что-то тёплое.
+  </p>
+
+  <div class="compliment-wrap">
+    <div class="compliment" id="compliment" role="status" aria-live="polite">
+      Год назад я ещё не знала, что можно быть настолько счастливой просто от чьего-то «доброе утро». ♥
+    </div>
+  </div>
+
+  <button class="btn" id="btn" type="button">
+    Скажи мне что-нибудь милое
+  </button>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     МАССИВ КОМПЛИМЕНТОВ — минимум 30, все про годовщину
+     ========================================================= */
+  const compliments = [
+    'Целый год с тобой — и я до сих пор улыбаюсь, когда вижу твоё сообщение.',
+    '365 дней, а мне кажется, что мы только начали. И это лучшая новость на свете.',
+    'Спасибо, что этот год был таким тёплым. Ты — моё любимое «мы».',
+    'Ты умеешь делать обычный вторник особенным. Проверено целым годом.',
+    'Год назад я влюбилась. Сегодня люблю ещё сильнее — и это только начало.',
+    'С тобой даже дождь за окном кажется уютным. За год я это точно поняла.',
+    'Ты — мой человек. И это самое приятное, что я узнала за 365 дней.',
+    'Мне нравится, как ты смеёшься, как молчишь и как просто есть рядом. Год — мало.',
+    'Если бы мне предложили прожить этот год заново — я бы выбрала тебя. Все 365 раз.',
+    'Ты моя первая мысль утром и самая тёплая — на ночь. Уже целый год.',
+    'Знаешь, что самое лучшее в этом годе? Что в конце каждого дня был ты.',
+    'Год вместе — это 12 месяцев моей самой любимой компании.',
+    'Я не считаю дни до нашей встречи, я считаю дни с тобой. И их уже 365.',
+    'Ты — мой самый уютный человек. Как плед, только лучше. И навсегда.',
+    'Мне нравится быть «твоей». В этом слове за год стало столько тепла.',
+    'Спасибо за каждый день этого года. Даже за те, что были не идеальными, — они наши.',
+    'Ты научил меня, что любовь — это спокойно и тепло. За год я в этом убедилась.',
+    'Год назад ты стал моим. А я до сих пор не верю своему счастью.',
+    'Я люблю наши маленькие ритуалы. И то, что за год их стало ещё больше.',
+    'Ты — моё «наконец-то». И целый год этого счастья — только разогрев.',
+    'Мне кажется, я знаю тебя целую жизнь. А прошёл всего один наш год.',
+    'В этом году я много смеялась. Почти всегда — из-за тебя.',
+    'Ты — причина, по которой я верю в «долго и счастливо». И это только первый год.',
+    'Целый год ты держишь меня за руку. Даже когда я ворчу. Особенно когда ворчу.',
+    'Ты мой дом. Не место, а человек. За год я это поняла окончательно.',
+    'Если бы «мы» было словом года, я бы произносила его каждый день. Что, в общем-то, и делаю.',
+    'Год с тобой — и я всё ещё влюблена. И, кажется, это неизлечимо.',
+    'Мне нравится, что мы растём вместе. И что впереди ещё много лет и много нас.',
+    'Ты — моё любимое «ещё чуть-чуть побудь рядом». Уже целый год.',
+    'Спасибо, что этот год был именно с тобой. Лучшего я и представить не могла.',
+    '365 дней — это только первая глава. А я уже влюблена в нашу историю.',
+    'Ты делаешь меня мягче, добрее и счастливее. За год это стало очевидным.',
+    'Мой любимый человек, мой лучший друг, моё самое тёплое «мы». С годовщиной, любимый.',
+    'Год назад я даже не догадывалась, сколько счастья помещается в одного человека.',
+    'Я люблю тебя не за что-то, а просто потому, что ты — ты. И за год это чувство только крепче.'
+  ];
+
+  /* =========================================================
+     ЭЛЕМЕНТЫ
+     ========================================================= */
+  const btn = document.getElementById('btn');
+  const complimentEl = document.getElementById('compliment');
+  const bgHeartsEl = document.getElementById('bgHearts');
+
+  let lastIndex = -1;      // индекс последнего показанного комплимента
+  let animating = false;   // защита от «дребезга» при быстрых кликах
+
+  /* =========================================================
+     ФУНКЦИЯ: получить случайный комплимент, не равный предыдущему
+     ========================================================= */
+  function getRandomComplimentIndex() {
+    if (compliments.length === 1) return 0;
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * compliments.length);
+    } while (idx === lastIndex);
+    return idx;
+  }
+
+  /* =========================================================
+     ФУНКЦИЯ: спавн нескольких сердечек от кнопки
+     ========================================================= */
+  function spawnHearts(x, y, count) {
+    const hearts = ['♥', '♡', '❤', '♥'];
+    for (let i = 0; i < count; i++) {
+      const h = document.createElement('span');
+      h.className = 'spawn-heart';
+      h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+
+      const size = 16 + Math.random() * 18;           // 16–34px
+      const dx = (Math.random() - 0.5) * 180;         // разлёт по X
+      const rot = (Math.random() - 0.5) * 60;         // поворот
+      const delay = Math.random() * 0.18;             // лёгкая задержка
+
+      h.style.left = x + 'px';
+      h.style.top = y + 'px';
+      h.style.fontSize = size + 'px';
+      h.style.setProperty('--dx', dx + 'px');
+      h.style.setProperty('--rot', rot + 'deg');
+      h.style.animationDelay = delay + 's';
+
+      // Небольшой сдвиг стартовой точки — чтобы сердечки не слипались
+      h.style.marginLeft = (Math.random() - 0.5) * 30 + 'px';
+      h.style.marginTop = (Math.random() - 0.5) * 10 + 'px';
+
+      document.body.appendChild(h);
+
+      // Удаляем после окончания анимации
+      setTimeout(() => {
+        if (h.parentNode) h.parentNode.removeChild(h);
+      }, 1800 + delay * 1000);
+    }
+  }
+
+  /* =========================================================
+     ФУНКЦИЯ: показать новый комплимент с анимацией замены
+     ========================================================= */
+  function showNextCompliment() {
+    if (animating) return;
+    animating = true;
+
+    const newIndex = getRandomComplimentIndex();
+    const text = compliments[newIndex];
+
+    // 1) Плавно убираем старый
+    complimentEl.classList.remove('animate-in');
+    complimentEl.classList.add('fade-out');
+
+    // 2) Через время исчезновения меняем текст и плавно показываем
+    setTimeout(() => {
+      complimentEl.textContent = text;
+      complimentEl.classList.remove('fade-out');
+      // Принудительный reflow, чтобы анимация точно перезапустилась
+      void complimentEl.offsetWidth;
+      complimentEl.classList.add('animate-in');
+
+      lastIndex = newIndex;
+      animating = false;
+    }, 280);
+  }
+
+  /* =========================================================
+     ОБРАБОТЧИК КНОПКИ
+     ========================================================= */
+  btn.addEventListener('click', function (e) {
+    showNextCompliment();
+
+    // Сердечки спавнятся из центра кнопки
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    spawnHearts(cx, cy, 9 + Math.floor(Math.random() * 5));
+  });
+
+  /* =========================================================
+     ФОНОВЫЕ СЕРДЕЧКИ — постоянно летят вверх
+     ========================================================= */
+  function createBgHeart() {
+    const h = document.createElement('span');
+    h.className = 'bg-heart';
+    h.textContent = '♥';
+
+    const size = 12 + Math.random() * 22;               // 12–34px
+    const duration = 9 + Math.random() * 10;            // 9–19 сек
+    const left = Math.random() * 100;                   // по всей ширине
+    const delay = Math.random() * 6;                    // разброс старта
+
+    h.style.left = left + '%';
+    h.style.fontSize = size + 'px';
+    h.style.animationDuration = duration + 's';
+    h.style.animationDelay = delay + 's';
+
+    // Оттенки в рамках палитры: розовые и серые
+    const colors = ['#e8a0b4', '#f4c2d0', '#d97a95', '#8a8a8a', '#d3d3d3'];
+    h.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+    bgHeartsEl.appendChild(h);
+  }
+
+  // Создаём стартовую партию сердечек
+  const initialCount = 16;
+  for (let i = 0; i < initialCount; i++) {
+    createBgHeart();
+  }
+
+  // Периодически добавляем новые фоновые сердечки,
+  // чтобы поток не заканчивался
+  setInterval(function () {
+    if (bgHeartsEl.children.length < 30) {
+      createBgHeart();
+    }
+  }, 1400);
+
+  // Удаляем отлетевшие фоновые сердечки (оптимизация DOM)
+  setInterval(function () {
+    const hearts = bgHeartsEl.querySelectorAll('.bg-heart');
+    hearts.forEach(function (h) {
+      const anim = h.getAnimations ? h.getAnimations() : [];
+      // Если у элемента нет активных анимаций — значит, он отлетел
+      if (anim.length === 0 && h.style.animationDuration) {
+        // Даём небольшую паузу, чтобы не удалить «стартующие»
+        if (h.dataset.life === undefined) {
+          h.dataset.life = '1';
+          setTimeout(() => {
+            if (h.parentNode) h.parentNode.removeChild(h);
+          }, 500);
+        }
+      }
+    });
+  }, 4000);
+
+})();
+</script>
+</body>
+</html>
